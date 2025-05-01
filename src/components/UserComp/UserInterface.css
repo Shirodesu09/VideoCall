@@ -1,0 +1,64 @@
+.user-inter-title{
+    font-family: Roboto, Arial, sans-serif;
+    font-size: 2.8125rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 3.25rem;
+    color: var(--gm3-sys-color-on-surface, #1f1f1f);
+    padding-bottom: .5rem;
+    margin: 0;
+}
+.create-meet{
+    color: white;
+    background-color: #1B72E8;
+    font-family: Roboto, Arial, sans-serif;
+    padding: 6px 10px;
+    display: flex;
+    min-width: 150px;
+    border-radius: 30px;
+
+}
+.create-meet:hover{
+  cursor: pointer;
+}
+
+.input-field {
+    padding: 12px 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    width: 200px;
+  }
+  
+  .input-field:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  
+  .join-button {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%);
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .join-button:disabled {
+    background: linear-gradient(135deg, #e0e0e0 0%, #cccccc 100%);
+    cursor: not-allowed;
+    opacity: 0.8;
+  }
+  
+  .join-button:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 102, 255, 0.2);
+  }
+  
+  .join-button:not(:disabled):active {
+    transform: translateY(0);
+  }
