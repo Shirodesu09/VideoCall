@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import { UserButton } from "@clerk/clerk-react";
 import "./UserInterface.css";
-import useUserStore from "../../store";
-import MeetCard from "../MeetCard/MeetCard";
+import { useUserStore, useClientStore } from "../../store";
 import { db } from "../../firebase"; // make sure this is configured
 import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
 import { setDoc, doc } from "firebase/firestore";
-
 import { useNavigate } from "react-router-dom";
 
 function UserInterface() {
@@ -90,15 +88,7 @@ function UserInterface() {
         </div>
 
         {/* RIGHT half: user name, top-aligned */}
-        <div className="flex-1 self-start">
-          <div className="flex flex-wrap gap-4 overflow-y-auto max-h-[calc(100vh-80px)] p-2">
-            {meetings.map((meeting, index) => (
-              <div key={index} className="w-[calc(50%-0.5rem)]">
-                <MeetCard data={meeting} />
-              </div>
-            ))}
-          </div>
-        </div>
+
       </div>
     </div>
   ) : (

@@ -1,20 +1,20 @@
-// App.jsx
-import "./App.css";
+import React, { useEffect } from "react";
 import { SignedIn, SignedOut } from "@clerk/clerk-react";
 import { useUser } from "@clerk/clerk-react";
-import { useEffect } from "react";
+import { useUserStore, useClientStore } from "./store";
 import { db } from "./firebase";
 import { doc, setDoc } from "firebase/firestore";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import StreamVideoProvider from "./components/provider/StreamVideoProvider"; // Directly import StreamProvider
 import Home from "./components/HomeComp/Home";
 import UserInterface from "./components/UserComp/UserInterface";
-import MeetRoom from "./components/MeetRoom/MeetRoom.jsx";
-import useUserStore from "./store.js";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import MeetRoom from "./components/MeetRoom/MeetRoom";
 
 function App() {
   const { user } = useUser();
   const setCurrentUser = useUserStore((state) => state.setCurrentUser);
 
+  // Sync user data with Firebase when the user logs in
   useEffect(() => {
     if (user) {
       setCurrentUser(user);
@@ -40,7 +40,7 @@ function App() {
 
       sendUserToFirebase();
     }
-  }, [user]);
+  }, [user, setCurrentUser]);
 
   return (
     <Router>
@@ -62,7 +62,9 @@ function App() {
           path="/meetUI/:meetId"
           element={
             <SignedIn>
-              <MeetRoom />
+              <StreamVideoProvider>
+                <MeetRoom />
+              </StreamVideoProvider>
             </SignedIn>
           }
         />

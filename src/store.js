@@ -5,4 +5,9 @@ const useUserStore = create((set) => ({
   setCurrentUser: (user) => set({ currentUser: user }),
 }));
 
-export default useUserStore;
+const useClientStore = create((set) => ({
+  currentClient: null,
+  setCurrentClient: (client) => set({ currentClient: client }),
+}));
+
+export { useUserStore, useClientStore };
