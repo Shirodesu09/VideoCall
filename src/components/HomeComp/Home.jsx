@@ -1,12 +1,12 @@
 import React from 'react'
 import {
-    SignInButton,
+    SignInButton,SignUp
   }from "@clerk/clerk-react";
 function Home() {
   return (
-    <div className=''>
+    <div className='flex justify-center'>
         <SignInButton>
-          Login 
+          <SignUp /> 
         </SignInButton>
     </div>
   )

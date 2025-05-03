@@ -1,9 +1,12 @@
 import React from "react";
 import "./MeetCard.css"
-function MeetCard() {
-    const inviter = "Ahmed Akrout";
+function MeetCard({data}) {
+    const inviter = data.hostName;
     const fileName = "Web Design"; 
     const timeAgo = "At 4:25PM";
+    console.log(data);
+    
+    
   return (
     <div className="card">
       <div className="container">
@@ -17,10 +20,6 @@ function MeetCard() {
                 {inviter}
               </a>{" "}
               started a meeting
-              <a className="text-link" href="#">
-                {" "}
-                {fileName}{" "}
-              </a>{" "}
             </p>
             <p className="time">{timeAgo}</p>
           </div>

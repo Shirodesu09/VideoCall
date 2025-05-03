@@ -3,31 +3,41 @@ import { UserButton } from "@clerk/clerk-react";
 import "./UserInterface.css";
 import useUserStore from "../../store";
 import MeetCard from "../MeetCard/MeetCard";
+import { db } from "../../firebase"; // make sure this is configured
+import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
+import { setDoc, doc } from "firebase/firestore";
+
+import { useNavigate } from "react-router-dom";
 
 function UserInterface() {
   const currentUser = useUserStore((state) => state.currentUser);
   const [RoomId, setRoomId] = useState("");
   const handleRoomIdChange = (e) => setRoomId(e.target.value);
   const [meetings, setMeetings] = useState([]);
+  const generateRoomId = () => {
+    return crypto.randomUUID(); // This gives you a UUID like "7b9a98fe-6f22-44b5-b65a-e742998c7ff5"
+  };
+  const navigate = useNavigate();
+  
 
-  const createMeeting = () => {
-
-    const roomId =
-      currentUser.fullName.slice(0, 2).toLowerCase() + currentUser.id.slice(0, 8).toLowerCase();
-
+  const createMeeting = async () => {
+    const roomId = generateRoomId();
+  
     const newMeeting = {
       meetId: roomId,
       hostId: currentUser.id,
       hostName: currentUser.fullName,
       description: "",
-      subject: ""
+      subject: "",
     };
-
+  
+    await setDoc(doc(db, "meetings", roomId), newMeeting); // ← uses meetId as doc ID
     setMeetings((prev) => [...prev, newMeeting]);
-    console.log(meetings)
+  
+    navigate(`/meetUI/${roomId}`); // 👈 don't forget to redirect
   };
 
-  return currentUser? (
+  return currentUser ? (
     <div className="h-screen flex flex-col p-5">
       {/* top-right avatar */}
       <div className="flex justify-end">
@@ -45,7 +55,6 @@ function UserInterface() {
 
       {/* main content */}
       <div className="flex-1 flex flex-col md:flex-row gap-4">
-        
         {/* LEFT half: column with title + controls */}
         <div className="flex-1 flex flex-col justify-center items-start space-y-6">
           {/* Row 1: title */}
@@ -54,8 +63,11 @@ function UserInterface() {
           </h1>
 
           {/* Row 2: controls in a row */}
-          <div className="flex items-center space-x-4">
-            <span className="create-meet w-fit flex items-center" onClick={createMeeting}>
+          <div className="flex items-center space-x-1">
+            <span
+              className="create-meet w-fit flex items-center"
+              onClick={createMeeting}
+            >
               <i className="mr-2 material-icons notranslate"></i>
               New Meeting
             </span>
@@ -78,22 +90,20 @@ function UserInterface() {
         </div>
 
         {/* RIGHT half: user name, top-aligned */}
-        <div className="flex-1 self-start overflow-auto">
-          <div className="flex flex-col gap-4 overflow-y-auto max-h-[calc(100vh-60px)] pr-2">
-             <MeetCard />
-             <MeetCard />
-             <MeetCard />
-             <MeetCard />
-             <MeetCard />
-             <MeetCard />
+        <div className="flex-1 self-start">
+          <div className="flex flex-wrap gap-4 overflow-y-auto max-h-[calc(100vh-80px)] p-2">
+            {meetings.map((meeting, index) => (
+              <div key={index} className="w-[calc(50%-0.5rem)]">
+                <MeetCard data={meeting} />
+              </div>
+            ))}
           </div>
-
         </div>
       </div>
     </div>
   ) : (
     <div>Loading </div>
-  )
+  );
 }
 
 export default UserInterface;
