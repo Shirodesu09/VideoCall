@@ -34,6 +34,7 @@ import {
   useJoinCall,
   useChatChannel,
 } from "./hooks/useMeetRoomLogic";
+import { useEmotionDetection } from "./hooks/useEmotionDetection";
 
 const MeetRoom = () => {
   const { meetId } = useParams();
@@ -41,7 +42,9 @@ const MeetRoom = () => {
   const currentVideoClient = useVideoClientStore((s) => s.currentVideoClient);
   const currentChatClient = useChatClientStore((s) => s.currentChatClient);
   const setChannelId = usechannelIdStore((s) => s.setChannelId);
+
   const [highlightSpotlight, setHighlightSpotlight] = useState(false);
+
   const userRole = useAssignUserRole(meetId, currentUser);
   const { call, error: callError } = useJoinCall(currentVideoClient, meetId);
   const { channel, error: chatError } = useChatChannel(
@@ -51,37 +54,25 @@ const MeetRoom = () => {
     setChannelId
   );
 
+  useEmotionDetection(
+    highlightSpotlight,
+    ".spotlight-highlight .str-video__speaker-layout__spotlight video"
+  );
+
   if (!currentUser) return <div>Loading user data...</div>;
   if (callError || chatError) return <div>Error: {callError || chatError}</div>;
   if (!call) return <div>Joining call...</div>;
   if (!channel) return <LoadingIndicator />;
 
   return (
-    <div
-      className={`meet-room-container ${userRole}`}
-      style={{ display: "flex", height: "100vh" }}
-    >
-      <div
-        className="video-container"
-        style={{ flex: 2, position: "relative" }}
-      >
+    <div className={`meet-room-container ${userRole}`} style={{ display: "flex", height: "100vh" }}>
+      <div className="video-container" style={{ flex: 2, position: "relative" }}>
         {userRole === "host" && (
           <button
-            style={{
-              position: "absolute",
-              bottom: 20,
-              left: 20,
-              padding: "6px 12px",
-              backgroundColor: highlightSpotlight ? "#ff6961" : "#4caf50",
-              color: "#fff",
-              border: "none",
-              borderRadius: "8px",
-              cursor: "pointer",
-              zIndex: 10,
-            }}
-            onClick={() => setHighlightSpotlight((prev) => !prev)}
+            className={`model-toggle-button ${highlightSpotlight ? "active" : ""}`}
+            onClick={() => setHighlightSpotlight(!highlightSpotlight)}
           >
-            {highlightSpotlight ? "disable model" : "enable model"}
+            {highlightSpotlight ? "Disable Model" : "Enable Model"}
           </button>
         )}
 
@@ -97,10 +88,7 @@ const MeetRoom = () => {
         </div>
       </div>
 
-      <div
-        className="chat-container"
-        style={{ flex: 1, borderLeft: "1px solid #ccc" }}
-      >
+      <div className="chat-container" style={{ flex: 1, borderLeft: "1px solid #ccc" }}>
         <Chat client={currentChatClient}>
           <Channel channel={channel}>
             <Window>
@@ -113,17 +101,7 @@ const MeetRoom = () => {
         </Chat>
       </div>
 
-      <div
-        style={{
-          position: "absolute",
-          top: 16,
-          right: 16,
-          padding: "4px 8px",
-          background: "rgba(0,0,0,0.6)",
-          color: "#fff",
-          borderRadius: 4,
-        }}
-      >
+      <div className="user-role-display">
         Role: {userRole}
       </div>
     </div>
