@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { UserButton } from "@clerk/clerk-react";
 import "./UserInterface.css";
-import { useUserStore, useClientStore } from "../../store";
+import { useUserStore,  } from "../../store";
 import { db } from "../../firebase"; // make sure this is configured
 import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
 import { setDoc, doc } from "firebase/firestore";
@@ -32,7 +32,7 @@ function UserInterface() {
     await setDoc(doc(db, "meetings", roomId), newMeeting); // ← uses meetId as doc ID
     setMeetings((prev) => [...prev, newMeeting]);
   
-    navigate(`/meetUI/${roomId}`); // 👈 don't forget to redirect
+    navigate(`/meetUI/${roomId}`); 
   };
 
   return currentUser ? (

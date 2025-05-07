@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { SignedIn, SignedOut } from "@clerk/clerk-react";
 import { useUser } from "@clerk/clerk-react";
-import { useUserStore, useClientStore } from "./store";
+import { useUserStore} from "./store";
 import { db } from "./firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import StreamVideoProvider from "./components/provider/StreamVideoProvider"; // Directly import StreamProvider
+import StreamVideoProvider from "./components/provider/StreamVideoProvider";
+import ChatProvider from "./components/provider/ChatProvider"; // Directly import StreamProvider
 import Home from "./components/HomeComp/Home";
 import UserInterface from "./components/UserComp/UserInterface";
 import MeetRoom from "./components/MeetRoom/MeetRoom";
@@ -13,6 +14,8 @@ import MeetRoom from "./components/MeetRoom/MeetRoom";
 function App() {
   const { user } = useUser();
   const setCurrentUser = useUserStore((state) => state.setCurrentUser);
+  const currentUser = useUserStore((state) => state.currentUser);
+
 
   // Sync user data with Firebase when the user logs in
   useEffect(() => {
@@ -39,6 +42,7 @@ function App() {
       };
 
       sendUserToFirebase();
+      
     }
   }, [user, setCurrentUser]);
 
@@ -63,7 +67,9 @@ function App() {
           element={
             <SignedIn>
               <StreamVideoProvider>
-                <MeetRoom />
+                <ChatProvider>
+                  <MeetRoom />
+                </ChatProvider>
               </StreamVideoProvider>
             </SignedIn>
           }
