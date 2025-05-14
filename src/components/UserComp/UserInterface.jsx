@@ -1,26 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { UserButton } from "@clerk/clerk-react";
-import "./UserInterface.css";
-import { useUserStore,  } from "../../store";
-import { db } from "../../firebase"; // make sure this is configured
-import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
-import { setDoc, doc } from "firebase/firestore";
+import { useUserStore } from "../../store";
+import { db } from "../../firebase";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import logo from "../../assets/tale-logo.png";
+import "./UserInterface.css";
 
 function UserInterface() {
   const currentUser = useUserStore((state) => state.currentUser);
   const [RoomId, setRoomId] = useState("");
-  const handleRoomIdChange = (e) => setRoomId(e.target.value);
   const [meetings, setMeetings] = useState([]);
-  const generateRoomId = () => {
-    return crypto.randomUUID(); // This gives you a UUID like "7b9a98fe-6f22-44b5-b65a-e742998c7ff5"
-  };
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  
+
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      if (currentUser?.id) {
+        try {
+          const userRef = doc(db, "users", currentUser.id);
+          const userSnap = await getDoc(userRef);
+          
+          if (userSnap.exists()) {
+            setIsAdmin(userSnap.data().role === "admin");
+          }
+        } catch (error) {
+          console.error("Error checking admin status:", error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    checkAdminStatus();
+  }, [currentUser]);
+
+  const generateRoomId = () => crypto.randomUUID();
 
   const createMeeting = async () => {
     const roomId = generateRoomId();
-  
     const newMeeting = {
       meetId: roomId,
       hostId: currentUser.id,
@@ -28,71 +47,74 @@ function UserInterface() {
       description: "",
       subject: "",
     };
-  
-    await setDoc(doc(db, "meetings", roomId), newMeeting); // ← uses meetId as doc ID
+
+    await setDoc(doc(db, "meetings", roomId), newMeeting);
     setMeetings((prev) => [...prev, newMeeting]);
-  
-    navigate(`/meetUI/${roomId}`); 
+    navigate(`/meetUI/${roomId}`);
   };
 
-  return currentUser ? (
-    <div className="h-screen flex flex-col p-5">
-      {/* top-right avatar */}
-      <div className="flex justify-end">
+  const joinMeeting = () => {
+    if (RoomId) {
+      navigate(`/device-test/${RoomId}`); 
+    }
+  };
+
+  if (!currentUser || loading) {
+    return <div className="loading-container">Loading...</div>;
+  }
+
+  return (
+    <div className="user-interface-container">
+      <img src={logo} alt="Logo" className="user-interface-logo" />
+
+      <header className="user-interface-header">
         <UserButton
           appearance={{
             elements: {
               userButtonAvatarBox: {
                 width: "40px",
                 height: "40px",
+                borderRadius: "50%",
               },
             },
           }}
         />
-      </div>
+      </header>
 
-      {/* main content */}
-      <div className="flex-1 flex flex-col md:flex-row gap-4">
-        {/* LEFT half: column with title + controls */}
-        <div className="flex-1 flex flex-col justify-center items-start space-y-6">
-          {/* Row 1: title */}
-          <h1 className="user-inter-title">
+      <main className="user-interface-main">
+        <div className="meeting-controls-container">
+          <h1 className="meeting-title">
             Video calls and meetings for everyone
           </h1>
 
-          {/* Row 2: controls in a row */}
-          <div className="flex items-center space-x-1">
-            <span
-              className="create-meet w-fit flex items-center"
-              onClick={createMeeting}
-            >
-              <i className="mr-2 material-icons notranslate"></i>
-              New Meeting
-            </span>
-            <span className="input-container">
+          <div className="meeting-actions">
+            {isAdmin && (
+              <button className="new-meeting-btn" onClick={createMeeting}>
+                <span className="material-icons">video_call</span>
+                New Meeting
+              </button>
+            )}
+
+            <div className="join-meeting-section">
               <input
                 type="text"
-                className="input-field"
-                placeholder="Enter Room id"
+                className="room-id-input"
+                placeholder="Enter Room ID"
                 value={RoomId}
-                onChange={handleRoomIdChange}
+                onChange={(e) => setRoomId(e.target.value)}
               />
-            </span>
-            <button
-              className={`join-button ${!RoomId ? "disabled" : ""}`}
-              disabled={!RoomId}
-            >
-              Join Now
-            </button>
+              <button
+                className={`join-btn ${!RoomId ? "disabled" : ""}`}
+                disabled={!RoomId}
+                onClick={joinMeeting}
+              >
+                Join Call
+              </button>
+            </div>
           </div>
         </div>
-
-        {/* RIGHT half: user name, top-aligned */}
-
-      </div>
+      </main>
     </div>
-  ) : (
-    <div>Loading </div>
   );
 }
 

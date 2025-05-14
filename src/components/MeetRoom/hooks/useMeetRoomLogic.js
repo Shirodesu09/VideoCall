@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
 
-// 🧠 Role Assign Hook
+// Role Assign Hook
 export const useAssignUserRole = (meetId, currentUser) => {
   const [userRole, setUserRole] = useState(null);
 
@@ -34,7 +34,7 @@ export const useAssignUserRole = (meetId, currentUser) => {
   return userRole;
 };
 
-// 🎥 Video Join Hook
+// Video Join Hook
 export const useJoinCall = (videoClient, meetId) => {
   const [call, setCall] = useState(null);
   const [error, setError] = useState(null);
@@ -50,16 +50,12 @@ export const useJoinCall = (videoClient, meetId) => {
         console.error("Error joining call:", err);
         setError("Failed to join call");
       });
-
-    return () => {
-      callInstance?.leave().catch(console.error);
-    };
   }, [videoClient, meetId]);
 
   return { call, error };
 };
 
-// 💬 Chat Setup Hook
+// Chat Setup Hook
 export const useChatChannel = (chatClient, meetId, currentUser, setChannelId) => {
   const [channel, setChannel] = useState(null);
   const [error, setError] = useState(null);

@@ -3,7 +3,6 @@ import { StreamChat } from "stream-chat";
 import {
   useUserStore,
   useChatClientStore,
-  usechannelIdStore,
 } from "../../store";
 
 const ChatProvider = ({ children }) => {

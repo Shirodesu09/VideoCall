@@ -19,4 +19,19 @@ const usechannelIdStore = create((set) => ({
   channelId: null,  // Consistent naming
   setChannelId: (id) => set({ channelId: id }),  // Consistent naming
 }));
-export { useUserStore, useVideoClientStore, useChatClientStore, usechannelIdStore };
+const useEmotionStore = create((set) => ({
+  emotionHistory: [], // Array to store all emotion entries
+  
+  // Function to add a new emotion entry
+  addEmotionEntry: (emotionData) => 
+    set((state) => ({
+      emotionHistory: [...state.emotionHistory, {
+        ...emotionData,
+        timestamp: new Date().toISOString(), // Add a timestamp
+      }],
+    })),
+
+  // Optional: Clear history
+  clearHistory: () => set({ emotionHistory: [] }),
+}));
+export { useUserStore, useVideoClientStore, useChatClientStore, usechannelIdStore, useEmotionStore };

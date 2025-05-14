@@ -1,0 +1,43 @@
+/* App-wide styles */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+  }
+  
+  .logo-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo {
+    height: 40px; /* Adjust based on your logo */
+    width: auto;
+  }
+  
+  .app-main {
+    flex: 1;
+    padding: 1rem;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .app-header {
+      padding: 1rem;
+    }
+    
+    .logo {
+      height: 30px;
+    }
+  }
+

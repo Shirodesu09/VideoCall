@@ -1,49 +1,137 @@
-.spotlight-highlight .str-video__speaker-layout__spotlight {
-  border: 4px solid #4caf50;
-  border-radius: 16px;
-  padding: 4px;
-  box-shadow: 0 0 16px #4caf50;
-  transition: all 0.3s ease;
-}
-.spotlight-highlight .str-video__speaker-layout__spotlight video {
-  outline: 4px solid #4caf50;
-  border-radius: 12px;
-  box-shadow: 0 0 12px 2px rgba(76, 175, 80, 0.8);
+.meet-room-container {
+  position: relative;
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
 
-.model-toggle-button {
+.video-container {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background-color: #1a1a1a;
+}
+
+.chat-container {
+  flex: 1;
+  border-left: 1px solid #2d2d2d;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Detection Controls */
+.detection-controls {
   position: absolute;
   bottom: 20px;
   left: 20px;
-  padding: 6px 12px;
-  background-color: #4caf50;
-  color: #fff;
-  border: none;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.detection-button {
+  padding: 12px 24px !important;
+  background-color: #0e66af !important; /* RED when inactive */
+  color: white !important;
+  border: none !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  font-weight: bold !important;
+  font-size: 14px !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
+  min-width: 160px !important;
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.3s ease !important;
+}
+
+.detection-button.active {
+  background-color: #d32f2f !important; /* Blue when active */
+}
+
+.detection-button:hover {
+  transform: translateY(-2px) !important;
+}
+
+/* Detection result shown in top-right */
+.detection-result-topright {
+  position: absolute;
+  top: 35px;
+  right: 20px;
+  background: rgba(211, 47, 47, 0.9);
+  color: white;
+  padding: 8px 16px;
   border-radius: 8px;
-  cursor: pointer;
-  z-index: 10;
-  transition: background-color 0.3s ease;
-}
-
-.model-toggle-button.active {
-  background-color: #ff6961;
-}
-
-.user-role-display {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  padding: 4px 8px;
-  background: rgba(0, 0, 0, 0.6);
-  color: #fff;
-  border-radius: 4px;
   font-size: 14px;
-}
-.overlay-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 5;
-  pointer-events: none;
+  font-weight: bold;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
+.fps-selector {
+  margin-bottom: 5px;
+}
+
+.fps-dropdown {
+  padding: 8px 12px;
+  border-radius: 6px;
+  background-color: #1E88E5;
+  color: white;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.fps-dropdown option {
+  background: #1565C0;
+}
+
+/* Spotlight effect */
+.spotlight-highlight .str-video__speaker-layout__spotlight {
+  position: relative;
+  border: 4px solid #1E88E5;
+  border-radius: 16px;
+  padding: 4px;
+  box-shadow: 0 0 20px #1E88E5;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .meet-room-container {
+    flex-direction: column;
+  }
+
+  .video-container,
+  .chat-container {
+    flex: none;
+    height: 50vh;
+  }
+
+  .chat-container {
+    border-left: none;
+    border-top: 1px solid #2d2d2d;
+  }
+
+  .detection-controls {
+    bottom: 10px;
+    left: 10px;
+  }
+
+  .detection-button {
+    padding: 10px 16px;
+    font-size: 13px;
+    min-width: 140px;
+  }
+
+  .fps-dropdown {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}

@@ -52,28 +52,23 @@ export const useEmotionDetection = (enabled, videoSelector) => {
         const scaleX = overlay.width / video.videoWidth;
         const scaleY = overlay.height / video.videoHeight;
       
-        // Adjust for mirrored video
-        const flippedX1 = overlay.width - x2 * scaleX;  // Flip the x1 coordinate
-        const flippedX2 = overlay.width - x1 * scaleX;  // Flip the x2 coordinate
+        // Map directly (no horizontal flip)
+        const drawX = x1 * scaleX;
+        const drawY = y1 * scaleY;
+        const drawWidth = (x2 - x1) * scaleX;
+        const drawHeight = (y2 - y1) * scaleY;
       
         const octx = overlay.getContext("2d");
+        octx.clearRect(0, 0, overlay.width, overlay.height); // optional: clear old boxes
         octx.strokeStyle = "lime";
         octx.lineWidth = 2;
-        octx.strokeRect(
-          flippedX1,
-          y1 * scaleY,
-          (flippedX2 - flippedX1),
-          (y2 - y1) * scaleY
-        );
+        octx.strokeRect(drawX, drawY, drawWidth, drawHeight);
       
         octx.fillStyle = "lime";
         octx.font = "14px sans-serif";
-        octx.fillText(
-          `${emotion} ${confidence}`,
-          flippedX1,
-          y1 * scaleY - 5
-        );
+        octx.fillText(`${emotion} ${confidence}`, drawX, drawY - 5);
       };
+      
       
 
       const captureFrame = () => {
@@ -96,7 +91,7 @@ export const useEmotionDetection = (enabled, videoSelector) => {
       intervalRef.current = setInterval(() => {
         captureFrame();
         updateOverlaySize();
-      }, 150);
+      }, 100);
 
       ws.onmessage = (evt) => {
         const results = JSON.parse(evt.data);
