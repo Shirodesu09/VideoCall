@@ -37,7 +37,6 @@ const MemoizedVideoComponent = memo(
   ({
     currentVideoClient,
     call,
-    isAlone,
     highlightSpotlight,
     emotionDetectionRef,
     userRole, // Add userRole as a prop

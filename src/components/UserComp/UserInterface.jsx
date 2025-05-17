@@ -6,6 +6,8 @@ import { doc, setDoc, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/tale-logo.png";
 import "./UserInterface.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function UserInterface() {
   const currentUser = useUserStore((state) => state.currentUser);
@@ -14,14 +16,14 @@ function UserInterface() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-
+  
   useEffect(() => {
     const checkAdminStatus = async () => {
       if (currentUser?.id) {
         try {
           const userRef = doc(db, "users", currentUser.id);
           const userSnap = await getDoc(userRef);
-          
+
           if (userSnap.exists()) {
             setIsAdmin(userSnap.data().role === "admin");
           }
@@ -53,9 +55,25 @@ function UserInterface() {
     navigate(`/meetUI/${roomId}`);
   };
 
-  const joinMeeting = () => {
-    if (RoomId) {
-      navigate(`/device-test/${RoomId}`); 
+  const joinMeeting = async () => {
+    if (!RoomId) return;
+
+    try {
+      const meetingRef = doc(db, "meetings", RoomId);
+      const meetingSnap = await getDoc(meetingRef);
+
+      if (meetingSnap.exists()) {
+        navigate(`/device-test/${RoomId}`);
+      } else {
+        toast.error("Meeting ID not found. Please check and try again.", {
+          position: "bottom-right",
+        });
+      }
+    } catch (error) {
+      console.error("Error joining meeting:", error);
+      toast.error("Something went wrong. Please try again later.", {
+        position: "bottom-right",
+      });
     }
   };
 
@@ -110,6 +128,7 @@ function UserInterface() {
               >
                 Join Call
               </button>
+              <ToastContainer />
             </div>
           </div>
         </div>
