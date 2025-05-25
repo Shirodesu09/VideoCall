@@ -86,7 +86,7 @@ function App() {
         />
 
         <Route
-          path="/leaveCall"
+          path="/emotion-stats"
           element={
             <SignedIn>
               <AdminProtectedRoute>

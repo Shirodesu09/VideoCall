@@ -1,5 +1,6 @@
-import { useState, useRef, useEffect, memo,useCallback  } from "react";
+import { useState, useRef, useEffect, memo, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import LoaderUI from "../LoaderUI/LoaderUI";
 import "./MeetRoom.css";
 import {
   useAssignUserRole,
@@ -32,14 +33,16 @@ import {
   usechannelIdStore,
   useEmotionStore,
 } from "../../store";
+import logo from "../../assets/tale-logo.png";
 
 const MemoizedVideoComponent = memo(
   ({
     currentVideoClient,
     call,
+    isAlone,
     highlightSpotlight,
     emotionDetectionRef,
-    userRole, // Add userRole as a prop
+    userRole, 
   }) => {
     const containerRef = useRef(null);
     const navigate = useNavigate();
@@ -69,7 +72,7 @@ const MemoizedVideoComponent = memo(
       } catch (error) {
         console.error("Error leaving call:", error);
       } finally {
-        navigate(userRole === "host" ? "/LeaveCall" : "/");
+        navigate(userRole === "host" ? "/emotion-stats" : "/");
       }
     }, [call, navigate, userRole, isLeaving]);
 
@@ -156,6 +159,69 @@ const DetectionControls = memo(
   }
 );
 
+const FaceDetectionCanvas = memo(({ faceDetection }) => {
+  const canvasRef = useRef(null);
+  const containerRef = useRef(null);
+  
+  useEffect(() => {
+    if (!canvasRef.current || !faceDetection || !containerRef.current) return;
+
+    const videoElement = document.querySelector('.str-video__speaker-layout__spotlight video');
+    if (!videoElement) return;
+    
+    const containerRect = containerRef.current.getBoundingClientRect();
+    const videoRect = videoElement.getBoundingClientRect();
+
+    canvasRef.current.width = containerRect.width;
+    canvasRef.current.height = containerRect.height;
+    
+    const scaleX = videoRect.width / faceDetection.sourceWidth;
+    const scaleY = videoRect.height / faceDetection.sourceHeight;
+    
+    const offsetX = (containerRect.width - videoRect.width) / 2;
+    const offsetY = (containerRect.height - videoRect.height) / 2;
+    
+    const ctx = canvasRef.current.getContext('2d');
+    ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    
+    if (faceDetection.box) {
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = '#1E88E5';
+      
+      const scaledX = offsetX + (faceDetection.box.x * scaleX  + 5);
+      const scaledY = offsetY + (faceDetection.box.y * scaleY - 150);
+      const scaledWidth = faceDetection.box.width * scaleX;
+      const scaledHeight = faceDetection.box.height * scaleY;
+      
+      ctx.strokeRect(
+        scaledX, 
+        scaledY, 
+        scaledWidth, 
+        scaledHeight
+      );
+      
+      if (faceDetection.emotion) {
+        ctx.font = 'bold 16px Arial';
+        ctx.fillStyle = '#1E88E5';
+        
+        ctx.fillText(
+          `${faceDetection.emotion} (${Math.round(faceDetection.confidence * 100)}%)`,
+          scaledX, 
+          scaledY - 10
+        );
+      }
+    }
+  }, [faceDetection]);
+  
+  if (!faceDetection) return null;
+  
+  return (
+    <div ref={containerRef} className="face-detection-canvas-container">
+      <canvas ref={canvasRef} className="face-detection-canvas"/>
+    </div>
+  );
+});
+
 const MeetRoom = () => {
   const { meetId } = useParams();
   const currentUser = useUserStore((state) => state.currentUser);
@@ -169,11 +235,13 @@ const MeetRoom = () => {
 
   const [highlightSpotlight, setHighlightSpotlight] = useState(false);
   const [emotionData, setEmotionData] = useState(null);
+  const [faceDetection, setFaceDetection] = useState(null);
 
   const emotionDetectionRef = useRef({
     videoElement: null,
     containerElement: null,
   });
+  const faceDetectionCanvasRef = useRef(null);
 
   const userRole = useAssignUserRole(meetId, currentUser);
   const { call, error: callError } = useJoinCall(currentVideoClient, meetId);
@@ -188,19 +256,26 @@ const MeetRoom = () => {
   useEffect(() => {
     if (!highlightSpotlight) {
       setEmotionData(null);
+      setFaceDetection(null);
       return;
     }
 
     let isMounted = true;
     let detectionInterval = null;
     let processingInProgress = false;
+    let faceapiModule = null;
 
     const loadFaceDetection = async () => {
       try {
         const faceapi = await import("face-api.js");
+        faceapiModule = faceapi;
+        
         await faceapi.nets.tinyFaceDetector.loadFromUri("/models");
+        
         startDetection(faceapi);
-      } catch (error) {}
+      } catch (error) {
+        console.error("Error loading face-api models:", error);
+      }
     };
 
     const startDetection = (faceapi) => {
@@ -209,9 +284,14 @@ const MeetRoom = () => {
           const videoElement = document.querySelector(
             ".str-video__speaker-layout__spotlight video"
           );
+          
+          const videoContainer = document.querySelector(
+            ".str-video__speaker-layout__spotlight"
+          );
 
           if (
             !videoElement ||
+            !videoContainer ||
             processingInProgress ||
             videoElement.readyState < 2 ||
             videoElement.paused ||
@@ -237,14 +317,31 @@ const MeetRoom = () => {
             );
 
             if (detections.length > 0) {
-              const faceImages = await faceapi.extractFaces(canvas, [
-                detections[0],
-              ]);
+              const detection = detections[0];
+              
+              const faceImages = await faceapi.extractFaces(canvas, [detection]);
+              let emotionInfo = null;
+              
               if (faceImages?.[0]) {
-                await processFace(faceImages[0]);
+                emotionInfo = await processFace(faceImages[0]);
+              }
+              
+              if (isMounted) {
+                setFaceDetection({
+                  box: detection.box,
+                  sourceWidth: canvas.width,
+                  sourceHeight: canvas.height,
+                  emotion: emotionInfo?.emotion,
+                  confidence: emotionInfo?.confidence
+                });
+              }
+            } else {
+              if (isMounted) {
+                setFaceDetection(null);
               }
             }
           } catch (error) {
+            console.error("Face detection error:", error);
           } finally {
             processingInProgress = false;
           }
@@ -276,7 +373,6 @@ const MeetRoom = () => {
 
         const data = await response.json();
         addEmotionEntry(data);
-        console.log("Emotion saved:", data);
 
         if (isMounted) {
           setEmotionData({
@@ -285,7 +381,12 @@ const MeetRoom = () => {
             timestamp: new Date().toISOString(),
           });
         }
-      } catch (error) {}
+        
+        return data;
+      } catch (error) {
+        console.error("Error processing face:", error);
+        return null;
+      }
     };
 
     loadFaceDetection();
@@ -296,48 +397,17 @@ const MeetRoom = () => {
         clearInterval(detectionInterval);
       }
     };
-  }, [highlightSpotlight]);
+  }, [highlightSpotlight, addEmotionEntry]);
 
   const CustomChannelHeader = () => (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "64px",
-        backgroundColor: "#fff",
-        borderBottom: "1px solid #f0f0f0",
-        padding: "0 20px",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "10px",
-        }}
-      >
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M15 8V16H5V8H15ZM16 6H4C3.45 6 3 6.45 3 7V17C3 17.55 3.45 18 4 18H16C16.55 18 17 17.55 17 17V13.5L21 17.5V6.5L17 10.5V7C17 6.45 16.55 6 16 6Z"
-            fill="#555"
-          />
-        </svg>
-        <h2
-          style={{
-            margin: 0,
-            fontSize: "18px",
-            fontWeight: 500,
-            color: "#333",
-            fontFamily: "system-ui, -apple-system, sans-serif",
-          }}
-        >
+    <div className="custom-channel-header">
+      <div className="header-content">
+        <img 
+          src={logo} 
+          alt="Company Logo" 
+          className="h-6 w-auto object-contain" 
+        />
+        <h2 className="header-title">
           Meeting Room
         </h2>
       </div>
@@ -348,10 +418,47 @@ const MeetRoom = () => {
     setHighlightSpotlight((prev) => !prev);
   };
 
-  if (!currentUser) return <div>Loading user data...</div>;
+  useEffect(() => {
+    const setupFaceDetectionCanvas = () => {
+      const videoContainer = document.querySelector('.str-video__speaker-layout__spotlight');
+      if (videoContainer && !document.querySelector('.face-detection-overlay')) {
+        const overlay = document.createElement('div');
+        overlay.className = 'face-detection-overlay';
+        videoContainer.appendChild(overlay);
+      }
+    };
+    
+    const checkInterval = setInterval(() => {
+      if (document.querySelector('.str-video__speaker-layout__spotlight')) {
+        setupFaceDetectionCanvas();
+        clearInterval(checkInterval);
+      }
+    }, 500);
+    
+    return () => {
+      clearInterval(checkInterval);
+    };
+  }, [call]);
+
+  if (!currentUser)
+    return (
+      <div className="loading-container">
+        <LoaderUI />
+      </div>
+    );
   if (callError || chatError) return <div>Error: {callError || chatError}</div>;
-  if (!call) return <div>Joining call...</div>;
-  if (!channel) return <LoadingIndicator />;
+  if (!call)
+    return (
+      <div className="loading-container">
+        <LoaderUI />
+      </div>
+    );
+  if (!channel)
+    return (
+      <div className="loading-container">
+        <LoaderUI />
+      </div>
+    );
 
   return (
     <div className="meet-room-container">
@@ -373,8 +480,12 @@ const MeetRoom = () => {
           onToggleDetection={handleToggleDetection}
         />
 
+        {highlightSpotlight && faceDetection && (
+          <FaceDetectionCanvas faceDetection={faceDetection} />
+        )}
+
         <MemoizedVideoComponent
-          userRole={userRole} 
+          userRole={userRole}
           currentVideoClient={currentVideoClient}
           call={call}
           highlightSpotlight={highlightSpotlight}

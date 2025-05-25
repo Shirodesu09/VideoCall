@@ -42,7 +42,7 @@ const StreamVideoProvider = ({ children }) => {
 
         setCurrentVideoClient(videoClient);
       } catch (err) {
-        console.error("Failed to fetch token or init Stream client:", err);
+        console.error("Failed to fetch token or init video Stream client:", err);
       }
     };
 

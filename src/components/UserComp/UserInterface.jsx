@@ -9,6 +9,7 @@ import "./UserInterface.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
 function UserInterface() {
   const currentUser = useUserStore((state) => state.currentUser);
   const [RoomId, setRoomId] = useState("");
@@ -16,14 +17,14 @@ function UserInterface() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     const checkAdminStatus = async () => {
       if (currentUser?.id) {
         try {
           const userRef = doc(db, "users", currentUser.id);
           const userSnap = await getDoc(userRef);
-
+          
           if (userSnap.exists()) {
             setIsAdmin(userSnap.data().role === "admin");
           }

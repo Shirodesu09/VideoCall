@@ -3,7 +3,6 @@ import numpy as np
 from tensorflow.keras.models import load_model
 from PIL import Image
 import io
-import os
 
 EMOTIONS = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
 MODEL_PATH = "mini_xception_final_model.h5"

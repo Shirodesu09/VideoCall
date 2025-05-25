@@ -2,7 +2,6 @@ import React from 'react';
 import { MehIcon, SmileIcon, FrownIcon, AlertTriangleIcon } from 'lucide-react';
 import { getEmotionColor } from '../../utils/colorUtils';
 
-// Helper to choose the right icon
 const getEmotionIcon = (emotion) => {
   if (!emotion) return <MehIcon className="w-5 h-5 text-gray-500" />;
   
@@ -23,7 +22,7 @@ const getEmotionIcon = (emotion) => {
 };
 
 function EmotionSummary({ data = [] }) {
-  // Validate and sanitize input data
+
   if (!Array.isArray(data)) {
     return <div className="p-6 text-red-500">Invalid data format</div>;
   }
@@ -36,17 +35,15 @@ function EmotionSummary({ data = [] }) {
     return acc;
   }, {});
 
-  // Build stats array with fallbacks
   const emotionStats = Object.keys(emotionCounts).map((emotion) => ({
     emotion,
     count: emotionCounts[emotion],
     color: getEmotionColor(emotion),
   }));
 
-  // Sort descending
   emotionStats.sort((a, b) => b.count - a.count);
 
-  // Safely calculate average confidence
+  // calculate average confidence
   const avgConfidence = validData.length > 0 
     ? validData.reduce((sum, entry) => {
         const confidenceStr = entry?.confidence*100 || '0%';
@@ -55,12 +52,12 @@ function EmotionSummary({ data = [] }) {
       }, 0) / validData.length
     : 0;
 
-  // Latest entry with fallback
+  
   const latest = validData[validData.length - 1] || {};
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      {/* Dominant Emotion */}
+      
       <div className="bg-white p-6 rounded-lg shadow">
         <h2 className="text-sm font-medium text-gray-500 mb-2">DOMINANT EMOTION</h2>
         <div className="flex items-center mt-3">
@@ -85,9 +82,9 @@ function EmotionSummary({ data = [] }) {
         </div>
       </div>
 
-      {/* Average Confidence */}
+      
       <div className="bg-white p-6 rounded-lg shadow">
-        <h2 className="text-sm font-medium text-gray-500 mb-2">AVERAGE CONFIDENCE</h2>
+        <h2 className="text-sm font-medium text-gray-500 mb-2">AVERAGE MODEL CONFIDENCE</h2>
         <div className="mt-3">
           <div className="flex items-center justify-between">
             <span className="text-2xl font-semibold">{avgConfidence.toFixed(1)}%</span>
@@ -102,7 +99,7 @@ function EmotionSummary({ data = [] }) {
         </div>
       </div>
 
-      {/* Current Emotion */}
+      
       <div className="bg-white p-6 rounded-lg shadow">
         <h2 className="text-sm font-medium text-gray-500 mb-2">LAST DETECTED EMOTION</h2>
         <div className="flex items-center mt-3">
@@ -125,7 +122,7 @@ function EmotionSummary({ data = [] }) {
         </div>
       </div>
 
-      {/* Distribution Labels */}
+      
       {validData.length > 0 && (
         <div className="col-span-1 md:col-span-3 bg-white p-6 rounded-lg shadow">
           <h2 className="text-sm font-medium text-gray-500 mb-3">EMOTION DISTRIBUTION</h2>

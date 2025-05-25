@@ -11,7 +11,6 @@ import {
 } from 'recharts';
 import { getEmotionColor } from '../../utils/colorUtils';
 
-
 const emotionValues = {
   angry: 1,
   disgust: 2,
@@ -32,7 +31,7 @@ const CustomTimelineTooltip = ({ active, payload }) => {
         <p className="font-medium mt-1">
           Emotion: <span style={{ color: emotionColor }}>{data.emotion}</span>
         </p>
-        <p className="text-sm">Confidence: {data.Confidence}</p>
+        <p className="text-sm"> Confidence: {data.Confidence}</p>
       </div>
     );
   }
@@ -71,39 +70,51 @@ export function EmotionTimelineChart({ data }) {
     return ticks;
   };
 
+  // Calculate dynamic width based on data length
+  const minWidth = 800; // Minimum width of the chart
+  const itemWidth = 100; // Width per data point
+  const chartWidth = Math.max(minWidth, chartData.length * itemWidth);
+
   return (
-    <ResponsiveContainer width="100%" height="100%">
-      <LineChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
-        <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-        <XAxis
-          dataKey="index"
-          ticks={getTicks()}
-          tickFormatter={(i) => chartData[i]?.displayTime || ''}
-          angle={-45}
-          textAnchor="end"
-          height={60}
-          interval={0}
-        />
-        <YAxis
-          domain={[1, 7]}
-          ticks={[1,2,3,4,5,6,7]}
-          tickFormatter={(v) => {
-            const keys = Object.keys(emotionValues);
-            const emot = keys.find((k) => emotionValues[k] === v);
-            return emot ? emot.charAt(0).toUpperCase() + emot.slice(1) : '';
-          }}
-        />
-        <Tooltip content={<CustomTimelineTooltip />} />
-        <Legend />
-        <Line
-          type="monotone"
-          dataKey="emotionValue"
-          stroke="#8884d8"
-          activeDot={{ r: 8 }}
-          dot={<CustomizedDot />}
-          name="Emotion"
-        />
-      </LineChart>
-    </ResponsiveContainer>
+    <div className="w-full overflow-x-auto">
+      <div style={{ width: `${chartWidth}px`, height: "500px" }}>
+        <LineChart 
+          width={chartWidth}
+          height={500}
+          data={chartData} 
+          margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+          <XAxis
+            dataKey="index"
+            ticks={getTicks()}
+            tickFormatter={(i) => chartData[i]?.displayTime || ''}
+            angle={-45}
+            textAnchor="end"
+            height={60}
+            interval={0}
+          />
+          <YAxis
+            domain={[1, 7]}
+            ticks={[1,2,3,4,5,6,7]}
+            tickFormatter={(v) => {
+              const keys = Object.keys(emotionValues);
+              const emot = keys.find((k) => emotionValues[k] === v);
+              return emot ? emot.charAt(0).toUpperCase() + emot.slice(1) : '';
+            }}
+          />
+          <Tooltip content={<CustomTimelineTooltip />} />
+          <Legend />
+          <Line
+            type="monotone"
+            dataKey="emotionValue"
+            stroke="#8884d8"
+            activeDot={{ r: 8 }}
+            dot={<CustomizedDot />}
+            name="Emotion"
+          />
+        </LineChart>
+      </div>
+    </div>
   );
 }
