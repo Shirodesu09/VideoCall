@@ -3,18 +3,12 @@
 A web application that detects facial expressions in real-time during video calls, providing insights into participants' emotional states.
 
 ## Key Features
-<<<<<<< HEAD
 - **7 Emotion Recognition**: Detects angry, disgust, fear, happy, neutral, sad, and surprise
 - **Real-time Processing**: Analyzes video stream at 10 FPS
 - **Emotion Analytics Dashboard**: Visualizes emotion distribution and trends
 - **Admin Controls**: Meeting hosts can enable/disable emotion tracking
 - **User Authentication**: Secure login with email or Google
-=======
--  **7 Emotion Recognition**: Detects angry, disgust, fear, happy, neutral, sad, and surprise
--  **Real-time Processing**: Analyzes video stream
--  **Emotion Analytics Dashboard**: Visualizes emotion distribution and trends
--  **Admin Controls**: Meeting hosts can enable/disable emotion tracking
--  **User Authentication**: Secure login with email or Google
+- 
 ## Tech Stack
 ### Frontend
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
