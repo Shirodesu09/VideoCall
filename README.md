@@ -4,7 +4,7 @@ A web application that detects facial expressions in real-time during video call
 
 ## Key Features
 -  **7 Emotion Recognition**: Detects angry, disgust, fear, happy, neutral, sad, and surprise
--  **Real-time Processing**: Analyzes video stream at 10 FPS
+-  **Real-time Processing**: Analyzes video stream
 -  **Emotion Analytics Dashboard**: Visualizes emotion distribution and trends
 -  **Admin Controls**: Meeting hosts can enable/disable emotion tracking
 -  **User Authentication**: Secure login with email or Google
