@@ -8,7 +8,6 @@ A web application that detects facial expressions in real-time during video call
 - **Emotion Analytics Dashboard**: Visualizes emotion distribution and trends
 - **Admin Controls**: Meeting hosts can enable/disable emotion tracking
 - **User Authentication**: Secure login with email or Google
-- 
 ## Tech Stack
 ### Frontend
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
