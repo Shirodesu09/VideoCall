@@ -24,10 +24,28 @@ A web application that detects facial expressions in real-time during video call
 ### AI/ML
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=TensorFlow&logoColor=white)
 ![Mini-Xception](https://img.shields.io/badge/Model-Mini_Xception-blue)
->>>>>>> b315630d73d7481d55c3cc4195a7b7005c2ecba1
+
+## Real-time Emotion Detection
+
+The admin interface displays detected emotions with confidence scores during video calls:
+
+<div align="center">
+  
+| Happy | Neutral | Sad |
+|-------|---------|-----|
+| ![Happy](frontend/public/happy_interface.png) | ![Neutral](frontend/public/neutral_interface.png) | ![Sad](frontend/public/sad_interface.png) |
+
+| Angry | Disgust | Surprise | Fear |
+|-------|---------|----------|------|
+| ![Angry](frontend/public/angry_interface.png) | ![Disgust](frontend/public/disgust_interface.png) | ![Surprise](VideoCall\frontend\public\surprise_interface.png) | ![Fear](VideoCall\frontend\public\fear_interface.png) |
+
+</div>
+
 ### Confusion Matrix
 
 This matrix shows how well the model classifies the 7 emotions on the test set.
 
 ![Confusion Matrix](frontend/public/confusion_matrix.png)
+
+
 
