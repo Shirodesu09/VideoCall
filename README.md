@@ -1,6 +1,6 @@
 # Real-Time Emotion Recognition During Video Calls
 
-![Project Demo](https://via.placeholder.com/800x400.png?text=Meeting+Room+with+Emotion+Detection)
+![Project Demo]
 
 A web application that detects facial expressions in real-time during video calls, providing insights into participants' emotional states.
 
