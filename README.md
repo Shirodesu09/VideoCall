@@ -1,15 +1,13 @@
 # Real-Time Emotion Recognition During Video Calls
 
-![Project Demo]
-
 A web application that detects facial expressions in real-time during video calls, providing insights into participants' emotional states.
 
 ## Key Features
-- 🎭 **7 Emotion Recognition**: Detects angry, disgust, fear, happy, neutral, sad, and surprise
-- ⚡ **Real-time Processing**: Analyzes video stream at 10 FPS
-- 📊 **Emotion Analytics Dashboard**: Visualizes emotion distribution and trends
-- 👨‍💻 **Admin Controls**: Meeting hosts can enable/disable emotion tracking
-- 🔐 **User Authentication**: Secure login with email or Google
+-  **7 Emotion Recognition**: Detects angry, disgust, fear, happy, neutral, sad, and surprise
+-  **Real-time Processing**: Analyzes video stream at 10 FPS
+-  **Emotion Analytics Dashboard**: Visualizes emotion distribution and trends
+-  **Admin Controls**: Meeting hosts can enable/disable emotion tracking
+-  **User Authentication**: Secure login with email or Google
 
 ## Tech Stack
 ### Frontend
@@ -25,7 +23,7 @@ A web application that detects facial expressions in real-time during video call
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=TensorFlow&logoColor=white)
 ![Mini-Xception](https://img.shields.io/badge/Model-Mini_Xception-blue)
 >>>>>>> b315630d73d7481d55c3cc4195a7b7005c2ecba1
-### 📉 Confusion Matrix
+###  Confusion Matrix
 
 This matrix shows how well the model classifies the 7 emotions on the test set.
 
