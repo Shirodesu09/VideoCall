@@ -22,7 +22,6 @@ A web application that detects facial expressions in real-time during video call
 ### AI/ML
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=TensorFlow&logoColor=white)
 ![Mini-Xception](https://img.shields.io/badge/Model-Mini_Xception-blue)
->>>>>>> b315630d73d7481d55c3cc4195a7b7005c2ecba1
 ###  Confusion Matrix
 
 This matrix shows how well the model classifies the 7 emotions on the test set.
