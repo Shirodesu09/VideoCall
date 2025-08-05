@@ -1,12 +1,27 @@
-# React + Vite
+# Real-Time Emotion Recognition During Video Calls
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Project Demo]
 
-Currently, two official plugins are available:
+A web application that detects facial expressions in real-time during video calls, providing insights into participants' emotional states.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Key Features
+- 🎭 **7 Emotion Recognition**: Detects angry, disgust, fear, happy, neutral, sad, and surprise
+- ⚡ **Real-time Processing**: Analyzes video stream at 10 FPS
+- 📊 **Emotion Analytics Dashboard**: Visualizes emotion distribution and trends
+- 👨‍💻 **Admin Controls**: Meeting hosts can enable/disable emotion tracking
+- 🔐 **User Authentication**: Secure login with email or Google
 
-## Expanding the ESLint configuration
+## Tech Stack
+### Frontend
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![GetStream](https://img.shields.io/badge/GetStream.io-Chat%20%26%20Video-0061F2?style=for-the-badge&logo=Stream&logoColor=white)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Backend
+![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
+![Firebase](https://img.shields.io/badge/Firebase-039BE5?style=for-the-badge&logo=Firebase&logoColor=white)
+
+### AI/ML
+![TensorFlow](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=TensorFlow&logoColor=white)
+![Mini-Xception](https://img.shields.io/badge/Model-Mini_Xception-blue)
+>>>>>>> b315630d73d7481d55c3cc4195a7b7005c2ecba1
