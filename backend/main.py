@@ -14,8 +14,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-API_KEY = "kjxrrgdgge8t"
-API_SECRET = "xjj3ef9p733dh8fsbtjbsqf63rczk79swhraggtfvuey4z9naqcnvgfbtx3uwrth"
+API_KEY = "*****"
+API_SECRET = "*****"
 server_client = StreamChat(api_key=API_KEY, api_secret=API_SECRET)
 
 ALGORITHM = "HS256"
