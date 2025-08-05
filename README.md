@@ -41,7 +41,7 @@ The admin interface displays detected emotions with confidence scores during vid
 
 ### Confusion Matrix
 
-![Confusion Matrix](frontend/public/confusion_matrix.png)
+<img src="frontend/public/confusion_matrix.png" width="400" />
 
 
 
