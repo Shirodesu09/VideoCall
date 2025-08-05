@@ -15,7 +15,7 @@ A web application that detects facial expressions in real-time during video call
 ### Frontend
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![Stream API]([https://img.shields.io/badge/Stream_Chat-API-red](https://pbs.twimg.com/media/FCQL__DVQA0yp1_.png))
+![Stream API](https://img.shields.io/badge/Stream_Chat-API-red)
 
 ### Backend
 ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
