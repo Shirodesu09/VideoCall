@@ -29,4 +29,5 @@ A web application that detects facial expressions in real-time during video call
 
 This matrix shows how well the model classifies the 7 emotions on the test set.
 
-![Confusion Matrix](/confusion_matrix.png)
+![Confusion Matrix](frontend/public/confusion_matrix.png)
+
